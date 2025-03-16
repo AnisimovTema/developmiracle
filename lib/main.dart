@@ -392,10 +392,10 @@ class Footer extends StatelessWidget {
       color: Colors.black54,
       width: double.infinity,
       padding: const EdgeInsets.all(20),
-      child: const Center(
+      child: Center(
         child: Text(
-          '© 2025 Мой сайт. Все права защищены.',
-          style: TextStyle(color: Colors.white60),
+          '© ${DateTime.now().year} Miracle Development. All rights reserved.',
+          style: const TextStyle(color: Colors.white60),
         ),
       ),
     );
