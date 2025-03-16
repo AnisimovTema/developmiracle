@@ -1,4 +1,6 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Мой сайт',
+      title: 'Miracle Development',
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark().copyWith(
         scaffoldBackgroundColor: backgroundColor,
@@ -37,36 +39,58 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Индекс текущей отображаемой страницы (раздела)
-  int _currentIndex = 0;
-
-  // Список разделов с заголовками, текстовыми подсказками и иконками
+  // Список разделов с заголовками, идентификаторами контента, иконками и флагом disabled
   final List<Map<String, dynamic>> sections = [
     {
-      'title': 'Обо мне',
-      'content':
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Здесь можно разместить информацию о себе, своем опыте и интересах.',
+      'title': 'About us',
+      'contentId': 'about_us_page',
       'icon': Icons.edit, // Иконка пера / редактирования
+      'disabled': true,
     },
     {
-      'title': 'Мои проекты',
-      'content':
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. В этом разделе можно описать выполненные проекты, рассказать о технологиях и подходах, используемых в работе.',
+      'title': 'Projects',
+      'contentId': 'projects_page',
       'icon': Icons.work, // Иконка кейса / работы
+      'disabled': true,
     },
     {
-      'title': 'Доп. информация',
-      'content':
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Здесь можно добавить дополнительные сведения, такие как сертификаты, публикации или рекомендации.',
+      'title': 'Info',
+      'contentId': 'info_page',
       'icon': Icons.info_outline, // Иконка "i"
+      'disabled': true,
     },
     {
-      'title': 'Контакты',
-      'content':
-          'Lorem ipsum dolor sit amet, consectetur adipiscing elit. В этом разделе можно указать контактные данные, email, ссылки на соцсети и другие способы связи.',
+      'title': 'Contacts',
+      'contentId': 'contacts_page',
       'icon': Icons.alternate_email, // Иконка @
+      'disabled': false,
     },
   ];
+
+  // Индекс текущей отображаемой страницы (раздела), вычисляется в initState,
+  // при этом выбирается первый раздел, для которого disabled == false.
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex =
+        sections.indexWhere((section) => !(section['disabled'] ?? false));
+    if (_currentIndex == -1) {
+      _currentIndex = 0;
+    }
+  }
+
+  // Функция возвращает виджет страницы, основанный на contentId раздела.
+  Widget buildPageContent(Map<String, dynamic> section) {
+    String contentId = section['contentId'];
+    switch (contentId) {
+      case 'contacts_page':
+        return const ContentPage();
+      default:
+        return DefaultPageContent(title: section['title']);
+    }
+  }
 
   // Построение навигационных элементов для Drawer и AppBar
   List<Widget> buildNavItems(bool mobile) {
@@ -74,31 +98,44 @@ class _HomePageState extends State<HomePage> {
       int idx = entry.key;
       String label = entry.value['title'];
       IconData iconData = entry.value['icon'];
+      bool disabled = entry.value['disabled'] ?? false;
       return mobile
           ? ListTile(
-              leading: Icon(iconData, color: Colors.white),
-              title: Text(label),
-              onTap: () {
-                setState(() {
-                  _currentIndex = idx;
-                });
-                Navigator.pop(context); // закрыть Drawer
-              },
+              leading:
+                  Icon(iconData, color: disabled ? Colors.grey : Colors.white),
+              title: Text(
+                label,
+                style: TextStyle(color: disabled ? Colors.grey : Colors.white),
+              ),
+              onTap: disabled
+                  ? null
+                  : () {
+                      setState(() {
+                        _currentIndex = idx;
+                      });
+                      Navigator.pop(context); // закрыть Drawer
+                    },
             )
           : TextButton.icon(
-              onPressed: () {
-                setState(() {
-                  _currentIndex = idx;
-                });
-              },
-              icon: Icon(iconData,
-                  color:
-                      _currentIndex == idx ? MyApp.accentColor : Colors.white),
+              onPressed: disabled
+                  ? null
+                  : () {
+                      setState(() {
+                        _currentIndex = idx;
+                      });
+                    },
+              icon: Icon(
+                iconData,
+                color: _currentIndex == idx
+                    ? MyApp.accentColor
+                    : (disabled ? Colors.grey : Colors.white),
+              ),
               label: Text(
                 label,
                 style: TextStyle(
-                  color:
-                      _currentIndex == idx ? MyApp.accentColor : Colors.white,
+                  color: _currentIndex == idx
+                      ? MyApp.accentColor
+                      : (disabled ? Colors.grey : Colors.white),
                 ),
               ),
             );
@@ -110,7 +147,7 @@ class _HomePageState extends State<HomePage> {
     final bool mobile = isMobile(context);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Мой сайт'),
+        title: const Text('Miracle Development'),
         backgroundColor: MyApp.backgroundColor,
         elevation: 0,
         actions: mobile ? null : buildNavItems(false),
@@ -126,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     child: Center(
                       child: Text(
-                        'Навигация',
+                        'Navigation',
                         style: TextStyle(color: Colors.white, fontSize: 24),
                       ),
                     ),
@@ -140,29 +177,32 @@ class _HomePageState extends State<HomePage> {
       body: IndexedStack(
         index: _currentIndex,
         children: sections.map((section) {
-          return PageContent(
-            title: section['title'],
-            content: section['content'],
-          );
+          return buildPageContent(section);
         }).toList(),
       ),
       // Нижняя навигационная панель для мобильных устройств
       bottomNavigationBar: mobile
           ? BottomNavigationBar(
-              type:
-                  BottomNavigationBarType.shifting, // всегда показывать подписи
+              type: BottomNavigationBarType.fixed, // всегда показывать подписи
               currentIndex: _currentIndex,
               backgroundColor: MyApp.backgroundColor,
               selectedItemColor: MyApp.accentColor,
               unselectedItemColor: Colors.white,
               onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
+                bool disabled = sections[index]['disabled'] ?? false;
+                if (!disabled) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                }
               },
               items: sections.map((section) {
+                bool disabled = section['disabled'] ?? false;
                 return BottomNavigationBarItem(
-                  icon: Icon(section['icon']),
+                  icon: Icon(
+                    section['icon'],
+                    color: disabled ? Colors.grey : null,
+                  ),
                   label: section['title'],
                 );
               }).toList(),
@@ -172,12 +212,31 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-// Обновлённый виджет для содержимого страницы с разделом и постоянным футером
-class PageContent extends StatelessWidget {
+// Редактируемая страница для всех разделов, кроме 'contacts_page'
+class DefaultPageContent extends StatefulWidget {
   final String title;
-  final String content;
 
-  const PageContent({super.key, required this.title, required this.content});
+  const DefaultPageContent({super.key, required this.title});
+
+  @override
+  State<DefaultPageContent> createState() => _DefaultPageContentState();
+}
+
+class _DefaultPageContentState extends State<DefaultPageContent> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController(
+        text: 'Editable content for ${widget.title} page.');
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -190,7 +249,35 @@ class PageContent extends StatelessWidget {
             child: IntrinsicHeight(
               child: Column(
                 children: [
-                  Section(title: title, content: content),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 60, horizontal: 20),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.title,
+                          style: const TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.tealAccent,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        TextField(
+                          controller: _controller,
+                          maxLines: null,
+                          style: const TextStyle(
+                              fontSize: 18, color: Colors.white70),
+                          decoration: const InputDecoration(
+                            border: OutlineInputBorder(),
+                            hintText: 'Enter content here...',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const Spacer(),
                   if (!mobile) const Footer(),
                 ],
@@ -203,35 +290,95 @@ class PageContent extends StatelessWidget {
   }
 }
 
-class Section extends StatelessWidget {
-  final String title;
-  final String content;
-
-  const Section({super.key, required this.title, required this.content});
+// Виджет для страницы 'contacts_page'
+class ContentPage extends StatelessWidget {
+  const ContentPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 60, horizontal: 20),
-      width: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.tealAccent,
+    final bool mobile = isMobile(context);
+
+    // Функция для открытия ссылки
+    Future<void> _launchUrl(String url) async {
+      final Uri uri = Uri.parse(url);
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      } else {
+        // Можно добавить обработку ошибки
+        throw 'Could not launch $url';
+      }
+    }
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return SingleChildScrollView(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(minHeight: constraints.maxHeight),
+            child: IntrinsicHeight(
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 60, horizontal: 20),
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Contacts',
+                          style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.tealAccent,
+                          ),
+                        ),
+                        const SizedBox(height: 20),
+                        RichText(
+                          text: TextSpan(
+                            style: const TextStyle(
+                                fontSize: 18, color: Colors.white70),
+                            children: [
+                              const TextSpan(
+                                  text: 'You can write to us via telegram '),
+                              TextSpan(
+                                text: 'https://t.me/creativicy',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.tealAccent),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Открытие ссылки на telegram
+                                    _launchUrl('https://t.me/creativicy');
+                                  },
+                              ),
+                              const TextSpan(
+                                  text: ' or just send an email to '),
+                              TextSpan(
+                                text: 'support@developmiracle.com',
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.tealAccent),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () {
+                                    // Открытие почтовой ссылки
+                                    _launchUrl(
+                                        'mailto:support@developmiracle.com');
+                                  },
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const Spacer(),
+                  if (!mobile) const Footer(),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 20),
-          Text(
-            content,
-            style: const TextStyle(fontSize: 18, color: Colors.white70),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
