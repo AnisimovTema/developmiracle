@@ -1,0 +1,14 @@
+{
+  "navigation": "Навигация",
+  "aboutUs" : "О нас",
+  "projects": "Проекты",
+  "contacts": "Контакты",
+  "contacts_start": "Вы можете написать нам в Телеграм ",
+  "contacts_end": " или просто отправить письмо на ",
+  "activitySelfTracker_title": "Activity Self-Tracker",
+  "activitySelfTracker_description": "Собирайте статистику активности каждые 30 минут, исследуйте циклы продуктивности и становитесь лучше каждый день",
+  "linguea_title": "Linguea",
+  "linguea_description": "Создайте свой словарь - любые слова, языки или термины. Комфортные тренировки с использованием доказанных методик. Практичный импорт/экспорт слов",
+  "arvessian_title": "Arvessian",
+  "arvessian_description": "Новый язык, который понятен всем"
+}

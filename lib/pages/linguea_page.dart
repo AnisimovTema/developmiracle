@@ -1,14 +1,26 @@
 import 'package:developmiracle/main.dart';
+import 'package:developmiracle/src/settings/settings_controller.dart';
+import 'package:developmiracle/widgets/miracle_appbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class LingueaPage extends StatelessWidget {
-  const LingueaPage({super.key});
+  const LingueaPage({
+    super.key,
+    required this.settingsController,
+    required this.changeLanguage,
+  });
+
+  final SettingsController settingsController;
+  final VoidCallback changeLanguage;
 
   @override
   Widget build(BuildContext context) {
     final bool mobile = isMobile(context);
+    final messages = AppLocalizations.of(context)!;
 
     // Функция для открытия ссылки
     Future<void> _launchUrl(String url) async {
@@ -22,12 +34,12 @@ class LingueaPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Arvessian'),
-        backgroundColor: MyApp.backgroundColor,
-        elevation: 0,
-        // actions: mobile ? null : buildNavItems(false),
-        forceMaterialTransparency: true,
+      appBar: PreferredSize(
+        preferredSize: const Size(80, 80),
+        child: MiracleAppbar(
+          settingsController: settingsController,
+          changeLanguage: changeLanguage,
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {
@@ -56,11 +68,11 @@ class LingueaPage extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
                           RichText(
-                            text: TextSpan(
-                              style: const TextStyle(
+                            text: const TextSpan(
+                              style: TextStyle(
                                   fontSize: 18, color: Colors.white70),
                               children: [
-                                const TextSpan(
+                                TextSpan(
                                   text:
                                       'Hey, nothing here. This page may still be in development.',
                                 ),

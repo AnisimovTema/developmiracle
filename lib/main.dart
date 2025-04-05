@@ -1,246 +1,132 @@
-import 'package:developmiracle/projects_pages/arvessian_page.dart';
-import 'package:developmiracle/contacts_page.dart';
-import 'package:developmiracle/projects_page.dart';
-import 'package:developmiracle/projects_pages/linguea_page.dart';
-import 'package:developmiracle/projects_pages/tracker_page.dart';
+import 'package:developmiracle/delegates/arvessian_delegate.dart';
+import 'package:developmiracle/pages/arvessian_page.dart';
+import 'package:developmiracle/pages/home_page.dart';
+import 'package:developmiracle/pages/linguea_page.dart';
+import 'package:developmiracle/pages/tracker_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+
+import 'src/settings/settings_controller.dart';
+import 'src/settings/settings_service.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final settingsController = SettingsController(SettingsService());
+  await settingsController.loadSettings();
+
+  runApp(MyApp(
+    settingsController: settingsController,
+  ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   // Определяем основные цвета для тёмной темы
   static const Color backgroundColor = Color(0xFF121212);
   static const Color accentColor = Colors.tealAccent;
   static const Color textColor = Colors.white;
 
-  const MyApp({super.key});
+  const MyApp({super.key, required this.settingsController});
+
+  final SettingsController settingsController;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late Locale _locale;
+
+  final List<Locale> supportedLocales = const [
+    Locale('en'),
+    Locale('ru'),
+    // Locale('av'),
+  ];
+
+  void changeLanguage() {
+    // Получаем текущий индекс локали
+    int currentIndex =
+        supportedLocales.indexOf(widget.settingsController.localeMode);
+
+    if (currentIndex == -1) {
+      // Вычисляем следующий индекс по кругу
+      currentIndex = 0;
+    }
+
+    int nextIndex = (currentIndex + 1) % supportedLocales.length;
+
+    // Обновляем локаль через контроллер
+    widget.settingsController.updateLocaleMode(supportedLocales[nextIndex]);
+
+    setState(() {
+      _locale = supportedLocales[nextIndex];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    Locale _locale = widget.settingsController.localeMode;
+
     return MaterialApp(
       title: 'Miracle Development',
+      localizationsDelegates: [
+        AppLocalizations.delegate,
+        ArvessianDelegate(),
+        ArvessianCupertinoDelegate(),
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: supportedLocales,
       debugShowCheckedModeBanner: false,
+      locale: _locale,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: backgroundColor,
-        primaryColor: accentColor,
+        scaffoldBackgroundColor: MyApp.backgroundColor,
+        primaryColor: MyApp.accentColor,
         textTheme: ThemeData.dark()
             .textTheme
-            .apply(bodyColor: textColor, displayColor: textColor),
+            .apply(bodyColor: MyApp.textColor, displayColor: MyApp.textColor),
       ),
-      home: const HomePage(),
+      home: HomePage(
+        settingsController: widget.settingsController,
+        changeLanguage: changeLanguage,
+      ),
       initialRoute: '/',
       onGenerateRoute: (RouteSettings settings) {
         WidgetBuilder builder;
         switch (settings.name) {
           case '/':
-            builder = (BuildContext _) => const HomePage();
+            builder = (BuildContext _) => HomePage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
             break;
           case '/tracker':
             // ignore: prefer_const_constructors
-            builder = (BuildContext _) => TrackerPage();
+            builder = (BuildContext _) => TrackerPage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
             break;
           case '/linguea':
-            builder = (BuildContext _) => const LingueaPage();
+            builder = (BuildContext _) => LingueaPage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
             break;
           case '/arvessian':
-            builder = (BuildContext _) => const ArvessianPage();
+            builder = (BuildContext _) => ArvessianPage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
             break;
           default:
             throw Exception('Invalid route: ${settings.name}');
         }
         return MaterialPageRoute(builder: builder, settings: settings);
       },
-    );
-  }
-}
-
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  // Список разделов с заголовками, идентификаторами контента, иконками и флагом disabled
-  final List<Map<String, dynamic>> sections = [
-    {
-      'title': 'About us',
-      'contentId': 'about_us_page',
-      'icon': Icons.edit, // Иконка пера / редактирования
-      'disabled': true,
-    },
-    {
-      'title': 'Projects',
-      'contentId': 'projects_page',
-      'icon': Icons.work, // Иконка кейса / работы
-      'disabled': false,
-    },
-    // {
-    //   'title': 'Info',
-    //   'contentId': 'info_page',
-    //   'icon': Icons.info_outline, // Иконка "i"
-    //   'disabled': true,
-    // },
-    {
-      'title': 'Contacts',
-      'contentId': 'contacts_page',
-      'icon': Icons.alternate_email, // Иконка @
-      'disabled': false,
-    },
-  ];
-
-  // Индекс текущей отображаемой страницы (раздела), вычисляется в initState,
-  // при этом выбирается первый раздел, для которого disabled == false.
-  late int _currentIndex;
-
-  @override
-  void initState() {
-    super.initState();
-    _currentIndex =
-        sections.indexWhere((section) => !(section['disabled'] ?? false));
-    if (_currentIndex == -1) {
-      _currentIndex = 0;
-    }
-  }
-
-  // Функция возвращает виджет страницы, основанный на contentId раздела.
-  Widget buildPageContent(Map<String, dynamic> section) {
-    String contentId = section['contentId'];
-    switch (contentId) {
-      case 'contacts_page':
-        return const ContactsPage();
-      case 'projects_page':
-        return const ProjectsPage();
-      default:
-        return DefaultPageContent(title: section['title']);
-    }
-  }
-
-  // Построение навигационных элементов для Drawer и AppBar
-  List<Widget> buildNavItems(bool mobile) {
-    return sections.asMap().entries.map((entry) {
-      int idx = entry.key;
-      String label = entry.value['title'];
-      IconData iconData = entry.value['icon'];
-      bool disabled = entry.value['disabled'] ?? false;
-      return mobile
-          ? ListTile(
-              leading:
-                  Icon(iconData, color: disabled ? Colors.grey : Colors.white),
-              title: Text(
-                label,
-                style: TextStyle(color: disabled ? Colors.grey : Colors.white),
-              ),
-              onTap: disabled
-                  ? null
-                  : () {
-                      setState(() {
-                        _currentIndex = idx;
-                      });
-                      Navigator.pop(context); // закрыть Drawer
-                    },
-            )
-          : Padding(
-              padding: EdgeInsets.only(
-                right: idx == (sections.length - 1) ? 8.0 : 0.0,
-              ),
-              child: TextButton.icon(
-                onPressed: disabled
-                    ? null
-                    : () {
-                        setState(() {
-                          _currentIndex = idx;
-                        });
-                      },
-                icon: Icon(
-                  iconData,
-                  color: _currentIndex == idx
-                      ? MyApp.accentColor
-                      : (disabled ? Colors.grey : Colors.white),
-                ),
-                label: Text(
-                  label,
-                  style: TextStyle(
-                    color: _currentIndex == idx
-                        ? MyApp.accentColor
-                        : (disabled ? Colors.grey : Colors.white),
-                  ),
-                ),
-              ),
-            );
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final bool mobile = isMobile(context);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Miracle Development'),
-        backgroundColor: MyApp.backgroundColor,
-        elevation: 0,
-        actions: mobile ? null : buildNavItems(false),
-        forceMaterialTransparency: true,
-      ),
-      drawer: mobile
-          ? Drawer(
-              child: ListView(
-                padding: EdgeInsets.zero,
-                children: [
-                  const DrawerHeader(
-                    decoration: BoxDecoration(
-                      color: MyApp.backgroundColor,
-                    ),
-                    child: Center(
-                      child: Text(
-                        'Navigation',
-                        style: TextStyle(color: Colors.white, fontSize: 24),
-                      ),
-                    ),
-                  ),
-                  ...buildNavItems(true),
-                ],
-              ),
-            )
-          : null,
-      // Используем IndexedStack для переключения между страницами
-      body: IndexedStack(
-        index: _currentIndex,
-        children: sections.map((section) {
-          return buildPageContent(section);
-        }).toList(),
-      ),
-      // Нижняя навигационная панель для мобильных устройств
-      bottomNavigationBar: mobile
-          ? BottomNavigationBar(
-              type: BottomNavigationBarType.fixed, // всегда показывать подписи
-              currentIndex: _currentIndex,
-              backgroundColor: MyApp.backgroundColor,
-              selectedItemColor: MyApp.accentColor,
-              unselectedItemColor: Colors.white,
-              onTap: (index) {
-                bool disabled = sections[index]['disabled'] ?? false;
-                if (!disabled) {
-                  setState(() {
-                    _currentIndex = index;
-                  });
-                }
-              },
-              items: sections.map((section) {
-                bool disabled = section['disabled'] ?? false;
-                return BottomNavigationBarItem(
-                  icon: Icon(
-                    section['icon'],
-                    color: disabled ? Colors.grey : null,
-                  ),
-                  label: section['title'],
-                );
-              }).toList(),
-            )
-          : null,
     );
   }
 }

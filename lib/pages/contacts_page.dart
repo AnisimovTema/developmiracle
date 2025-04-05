@@ -3,12 +3,15 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ContactsPage extends StatelessWidget {
   const ContactsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final bool mobile = isMobile(context);
+    final messages = AppLocalizations.of(context)!;
 
     // Функция для открытия ссылки
     Future<void> _launchUrl(String url) async {
@@ -38,9 +41,9 @@ class ContactsPage extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
-                          'Contacts',
-                          style: TextStyle(
+                        Text(
+                          messages.contacts,
+                          style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: Colors.tealAccent,
@@ -52,8 +55,9 @@ class ContactsPage extends StatelessWidget {
                             style: const TextStyle(
                                 fontSize: 18, color: Colors.white70),
                             children: [
-                              const TextSpan(
-                                  text: 'You can write to us via telegram '),
+                              TextSpan(
+                                text: messages.contacts_start,
+                              ),
                               TextSpan(
                                 text: 'https://t.me/creativicy',
                                 style: const TextStyle(
@@ -65,8 +69,9 @@ class ContactsPage extends StatelessWidget {
                                     _launchUrl('https://t.me/creativicy');
                                   },
                               ),
-                              const TextSpan(
-                                  text: ' or just send an email to '),
+                              TextSpan(
+                                text: messages.contacts_end,
+                              ),
                               TextSpan(
                                 text: 'support@developmiracle.com',
                                 style: const TextStyle(

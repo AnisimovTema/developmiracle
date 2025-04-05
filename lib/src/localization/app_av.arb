@@ -1,0 +1,14 @@
+{
+  "navigation": "Navigation",
+  "aboutUs": "About us",
+  "projects": "Projects",
+  "contacts": "Contacts",
+  "contacts_start": "You can write us via Telegram ",
+  "contacts_end": " or just send an email to ",
+  "activitySelfTracker_title": "Activity Self-Tracker",
+  "activitySelfTracker_description": "Collect statistics on your activity every 30 minutes, monitor productivity cycles and increase it",
+  "linguea_title": "Linguea",
+  "linguea_description": "Create your own dictionary - any words, languages and terms. Comfortable workouts using a proven technique. Practical words import/export",
+  "arvessian_title": "Arvessian",
+  "arvessian_description": "A new language that anyone can understand"
+}

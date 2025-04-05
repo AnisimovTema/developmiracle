@@ -1,14 +1,26 @@
 import 'package:developmiracle/main.dart';
+import 'package:developmiracle/src/settings/settings_controller.dart';
+import 'package:developmiracle/widgets/miracle_appbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ArvessianPage extends StatelessWidget {
-  const ArvessianPage({super.key});
+  const ArvessianPage({
+    super.key,
+    required this.settingsController,
+    required this.changeLanguage,
+  });
+
+  final SettingsController settingsController;
+  final VoidCallback changeLanguage;
 
   @override
   Widget build(BuildContext context) {
     final bool mobile = isMobile(context);
+    final Locale locale = settingsController.localeMode;
 
     // Функция для открытия ссылки
     Future<void> _launchUrl(String url) async {
@@ -22,12 +34,12 @@ class ArvessianPage extends StatelessWidget {
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Arvessian'),
-        backgroundColor: MyApp.backgroundColor,
-        elevation: 0,
-        // actions: mobile ? null : buildNavItems(false),
-        forceMaterialTransparency: true,
+      appBar: PreferredSize(
+        preferredSize: const Size(80, 80),
+        child: MiracleAppbar(
+          settingsController: settingsController,
+          changeLanguage: changeLanguage,
+        ),
       ),
       body: LayoutBuilder(
         builder: (context, constraints) {

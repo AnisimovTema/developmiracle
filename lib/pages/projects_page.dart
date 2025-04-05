@@ -3,30 +3,33 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:equatable/equatable.dart';
 import 'package:developmiracle/main.dart';
 
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+
 class ProjectsPage extends StatelessWidget {
   const ProjectsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     final bool mobile = isMobile(context);
+    final messages = AppLocalizations.of(context)!;
     final projects = [
-      const _ProjectVM(
-          name: 'Activity Self-Tracker',
-          imageUrl: 'https://example.com/activity-tracker',
-          route: 'tracker',
-          description:
-              'Collect statistics on your activity every 30 minutes, monitor productivity cycles and increase it'),
-      const _ProjectVM(
-          name: 'Linguea',
-          imageUrl: 'https://example.com/linguea',
-          route: 'linguea',
-          description:
-              'Create your own dictionary - any words, languages and terms. Comfortable workouts using a proven technique. Practical words import/export'),
-      const _ProjectVM(
-          name: 'Arvessian',
+      _ProjectVM(
+        name: messages.activitySelfTracker_title,
+        imageUrl: 'https://example.com/activity-tracker',
+        route: 'tracker',
+        description: messages.activitySelfTracker_description,
+      ),
+      _ProjectVM(
+        name: messages.linguea_title,
+        imageUrl: 'https://example.com/linguea',
+        route: 'linguea',
+        description: messages.linguea_description,
+      ),
+      _ProjectVM(
+          name: messages.arvessian_title,
           imageUrl: 'https://example.com/arvessian',
           route: 'arvessian',
-          description: 'A new language that anyone can understand'),
+          description: messages.arvessian_description),
     ];
 
     Future<void> _launchUrl(String url) async {
@@ -54,10 +57,10 @@ class ProjectsPage extends StatelessWidget {
                     ),
                     child: Column(
                       children: [
-                        const Text(
-                          'Projects',
+                        Text(
+                          messages.projects,
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
                             color: Colors.tealAccent,
