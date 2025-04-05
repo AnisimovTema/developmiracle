@@ -17,18 +17,28 @@ void main() async {
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 
-  runApp(MyApp(
-    settingsController: settingsController,
-  ));
+  final savedLocale = settingsController.localeMode;
+
+  runApp(
+    MyApp(
+      settingsController: settingsController,
+      locale: savedLocale,
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({
+    super.key,
+    required this.settingsController,
+    required this.locale,
+  });
+
+  final Locale locale;
   // Определяем основные цвета для тёмной темы
   static const Color backgroundColor = Color(0xFF121212);
   static const Color accentColor = Colors.tealAccent;
   static const Color textColor = Colors.white;
-
-  const MyApp({super.key, required this.settingsController});
 
   final SettingsController settingsController;
 
@@ -45,17 +55,26 @@ class _MyAppState extends State<MyApp> {
     // Locale('av'),
   ];
 
+  @override
+  void initState() {
+    setState(() {
+      _locale = widget.locale;
+    });
+    super.initState();
+  }
+
   void changeLanguage() {
     // Получаем текущий индекс локали
     int currentIndex =
         supportedLocales.indexOf(widget.settingsController.localeMode);
 
+    int nextIndex = 0;
+
     if (currentIndex == -1) {
-      // Вычисляем следующий индекс по кругу
-      currentIndex = 0;
+      nextIndex = (currentIndex + 1) % supportedLocales.length;
     }
 
-    int nextIndex = (currentIndex + 1) % supportedLocales.length;
+    nextIndex = (currentIndex + 1) % supportedLocales.length;
 
     // Обновляем локаль через контроллер
     widget.settingsController.updateLocaleMode(supportedLocales[nextIndex]);
@@ -67,8 +86,6 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    Locale _locale = widget.settingsController.localeMode;
-
     return MaterialApp(
       title: 'Miracle Development',
       localizationsDelegates: [

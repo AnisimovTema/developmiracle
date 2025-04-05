@@ -100,6 +100,9 @@ class SettingsController with ChangeNotifier {
     // Persist the changes to a local database or the internet using the
     // SettingService.
     await _settingsService.updateLocaleMode(newLocale);
+
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString('locale', newLocale.toString());
   }
 
   ThemeMode? _findThemeBrightness(String? string) {

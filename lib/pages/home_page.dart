@@ -90,7 +90,9 @@ class _HomePageState extends State<HomePage> {
         case 'projects_page':
           return const ProjectsPage();
         default:
-          return DefaultPageContent(title: _getLabel(section));
+          return DefaultPageContent(
+            title: _getLabel(section),
+          );
       }
     }
 
@@ -104,12 +106,15 @@ class _HomePageState extends State<HomePage> {
         bool disabled = entry.value['disabled'] ?? false;
         return mobile
             ? ListTile(
-                leading: Icon(iconData,
-                    color: disabled ? Colors.grey : Colors.white),
+                leading: Icon(
+                  iconData,
+                  color: disabled ? Colors.grey : Colors.white,
+                ),
                 title: Text(
                   label,
-                  style:
-                      TextStyle(color: disabled ? Colors.grey : Colors.white),
+                  style: TextStyle(
+                    color: disabled ? Colors.grey : Colors.white,
+                  ),
                 ),
                 onTap: disabled
                     ? null
@@ -172,7 +177,8 @@ class _HomePageState extends State<HomePage> {
                     child: Center(
                       child: Text(
                         messages.navigation,
-                        style: const TextStyle(color: Colors.white, fontSize: 24),
+                        style:
+                            const TextStyle(color: Colors.white, fontSize: 24),
                       ),
                     ),
                   ),
