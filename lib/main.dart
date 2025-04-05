@@ -1,6 +1,9 @@
-import 'package:flutter/gestures.dart';
+import 'package:developmiracle/projects_pages/arvessian_page.dart';
+import 'package:developmiracle/contacts_page.dart';
+import 'package:developmiracle/projects_page.dart';
+import 'package:developmiracle/projects_pages/linguea_page.dart';
+import 'package:developmiracle/projects_pages/tracker_page.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(const MyApp());
@@ -27,6 +30,28 @@ class MyApp extends StatelessWidget {
             .apply(bodyColor: textColor, displayColor: textColor),
       ),
       home: const HomePage(),
+      initialRoute: '/',
+      onGenerateRoute: (RouteSettings settings) {
+        WidgetBuilder builder;
+        switch (settings.name) {
+          case '/':
+            builder = (BuildContext _) => const HomePage();
+            break;
+          case '/tracker':
+            // ignore: prefer_const_constructors
+            builder = (BuildContext _) => TrackerPage();
+            break;
+          case '/linguea':
+            builder = (BuildContext _) => const LingueaPage();
+            break;
+          case '/arvessian':
+            builder = (BuildContext _) => const ArvessianPage();
+            break;
+          default:
+            throw Exception('Invalid route: ${settings.name}');
+        }
+        return MaterialPageRoute(builder: builder, settings: settings);
+      },
     );
   }
 }
@@ -51,14 +76,14 @@ class _HomePageState extends State<HomePage> {
       'title': 'Projects',
       'contentId': 'projects_page',
       'icon': Icons.work, // Иконка кейса / работы
-      'disabled': true,
+      'disabled': false,
     },
-    {
-      'title': 'Info',
-      'contentId': 'info_page',
-      'icon': Icons.info_outline, // Иконка "i"
-      'disabled': true,
-    },
+    // {
+    //   'title': 'Info',
+    //   'contentId': 'info_page',
+    //   'icon': Icons.info_outline, // Иконка "i"
+    //   'disabled': true,
+    // },
     {
       'title': 'Contacts',
       'contentId': 'contacts_page',
@@ -86,7 +111,9 @@ class _HomePageState extends State<HomePage> {
     String contentId = section['contentId'];
     switch (contentId) {
       case 'contacts_page':
-        return const ContentPage();
+        return const ContactsPage();
+      case 'projects_page':
+        return const ProjectsPage();
       default:
         return DefaultPageContent(title: section['title']);
     }
@@ -116,26 +143,31 @@ class _HomePageState extends State<HomePage> {
                       Navigator.pop(context); // закрыть Drawer
                     },
             )
-          : TextButton.icon(
-              onPressed: disabled
-                  ? null
-                  : () {
-                      setState(() {
-                        _currentIndex = idx;
-                      });
-                    },
-              icon: Icon(
-                iconData,
-                color: _currentIndex == idx
-                    ? MyApp.accentColor
-                    : (disabled ? Colors.grey : Colors.white),
+          : Padding(
+              padding: EdgeInsets.only(
+                right: idx == (sections.length - 1) ? 8.0 : 0.0,
               ),
-              label: Text(
-                label,
-                style: TextStyle(
+              child: TextButton.icon(
+                onPressed: disabled
+                    ? null
+                    : () {
+                        setState(() {
+                          _currentIndex = idx;
+                        });
+                      },
+                icon: Icon(
+                  iconData,
                   color: _currentIndex == idx
                       ? MyApp.accentColor
                       : (disabled ? Colors.grey : Colors.white),
+                ),
+                label: Text(
+                  label,
+                  style: TextStyle(
+                    color: _currentIndex == idx
+                        ? MyApp.accentColor
+                        : (disabled ? Colors.grey : Colors.white),
+                  ),
                 ),
               ),
             );
@@ -151,6 +183,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: MyApp.backgroundColor,
         elevation: 0,
         actions: mobile ? null : buildNavItems(false),
+        forceMaterialTransparency: true,
       ),
       drawer: mobile
           ? Drawer(
@@ -251,7 +284,9 @@ class _DefaultPageContentState extends State<DefaultPageContent> {
                 children: [
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 60, horizontal: 20),
+                      vertical: 60,
+                      horizontal: 20,
+                    ),
                     width: double.infinity,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -290,99 +325,6 @@ class _DefaultPageContentState extends State<DefaultPageContent> {
   }
 }
 
-// Виджет для страницы 'contacts_page'
-class ContentPage extends StatelessWidget {
-  const ContentPage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final bool mobile = isMobile(context);
-
-    // Функция для открытия ссылки
-    Future<void> _launchUrl(String url) async {
-      final Uri uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
-      } else {
-        // Можно добавить обработку ошибки
-        throw 'Could not launch $url';
-      }
-    }
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                children: [
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 60, horizontal: 20),
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Contacts',
-                          style: TextStyle(
-                            fontSize: 32,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.tealAccent,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        RichText(
-                          text: TextSpan(
-                            style: const TextStyle(
-                                fontSize: 18, color: Colors.white70),
-                            children: [
-                              const TextSpan(
-                                  text: 'You can write to us via telegram '),
-                              TextSpan(
-                                text: 'https://t.me/creativicy',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.tealAccent),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    // Открытие ссылки на telegram
-                                    _launchUrl('https://t.me/creativicy');
-                                  },
-                              ),
-                              const TextSpan(
-                                  text: ' or just send an email to '),
-                              TextSpan(
-                                text: 'support@developmiracle.com',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.tealAccent),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    // Открытие почтовой ссылки
-                                    _launchUrl(
-                                        'mailto:support@developmiracle.com');
-                                  },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Spacer(),
-                  if (!mobile) const Footer(),
-                ],
-              ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
 class Footer extends StatelessWidget {
   const Footer({super.key});
 
@@ -404,5 +346,5 @@ class Footer extends StatelessWidget {
 
 // Проверка ширины экрана для адаптивности
 bool isMobile(BuildContext context) {
-  return MediaQuery.of(context).size.width < 600;
+  return MediaQuery.of(context).size.width < 700; //600;
 }
