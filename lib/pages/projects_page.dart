@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:equatable/equatable.dart';
 import 'package:developmiracle/main.dart';
-
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class ProjectsPage extends StatelessWidget {
@@ -12,54 +10,75 @@ class ProjectsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool mobile = isMobile(context);
     final messages = AppLocalizations.of(context)!;
-    final projects = [
-      _ProjectVM(
+    final double containerWidth =
+        mobile ? MediaQuery.of(context).size.width * 0.9 : 600;
+
+    final itProjects = [
+      _Project(
         name: messages.activitySelfTracker_title,
-        imageUrl: 'https://example.com/activity-tracker',
-        route: 'tracker',
         description: messages.activitySelfTracker_description,
+        route: 'tracker',
+        externalUrl: null,
       ),
-      _ProjectVM(
+      _Project(
         name: messages.linguea_title,
-        imageUrl: 'https://example.com/linguea',
-        route: 'linguea',
         description: messages.linguea_description,
+        route: 'linguea',
+        externalUrl: 'https://linguea.app',
       ),
-      _ProjectVM(
-          name: messages.arvessian_title,
-          imageUrl: 'https://example.com/arvessian',
-          route: 'arvessian',
-          description: messages.arvessian_description),
+    ];
+
+    final communityProjects = [
+      _Project(
+        name: messages.arvessian_title,
+        description: messages.arvessian_description,
+        route: 'arvessian',
+        externalUrl: null,
+      ),
+      _Project(
+        name: messages.brotherhood_title,
+        description: messages.brotherhood_description,
+        route: 'brotherhood',
+        externalUrl: 'https://brotherhood.example.com',
+      ),
     ];
 
     Future<void> _launchUrl(String url) async {
-      final Uri uri = Uri.parse(url);
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
-      } else {
-        throw 'Could not launch $url';
+      if (!await launchUrl(Uri.parse(url))) {
+        throw Exception('Could not launch $url');
+      }
+    }
+
+    void _handleProjectTap(_Project project) {
+      // if (project.externalUrl != null) {
+      //   _launchUrl(project.externalUrl!);
+      // } else
+      if (project.route != null) {
+        Navigator.pushNamed(context, '/${project.route}');
       }
     }
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: IntrinsicHeight(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 60,
+        return Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(
+                    minHeight: constraints.maxHeight - 40,
+                    minWidth: double.infinity,
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: mobile ? 20 : 60,
                       horizontal: 20,
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
                           messages.projects,
-                          textAlign: TextAlign.center,
                           style: const TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -67,89 +86,119 @@ class ProjectsPage extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: projects.map((project) {
-                            return MouseRegion(
+                        ...itProjects.map((project) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: MouseRegion(
                               cursor: SystemMouseCursors.click,
                               child: GestureDetector(
-                                onTap: () => Navigator.pushNamed(
-                                  context,
-                                  '/${project.route}',
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.only(bottom: 8.0),
-                                  child: Container(
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 600,
-                                      minWidth: 600,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.tealAccent,
+                                onTap: () => _handleProjectTap(project),
+                                child: Container(
+                                  width: containerWidth,
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.tealAccent),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.all(14),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        project.name,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
                                       ),
-                                      borderRadius: BorderRadius.circular(12),
-                                    ),
-                                    padding: const EdgeInsets.all(14),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          project.name,
-                                          style: const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.white,
-                                            // decoration: TextDecoration.underline,
-                                          ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        project.description,
+                                        style: const TextStyle(
+                                          color: Colors.white70,
                                         ),
-                                        Text(
-                                          project.description,
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            );
-                          }).toList(),
+                            ),
+                          );
+                        }),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 580),
+                            child: const Divider(),
+                          ),
                         ),
+                        const SizedBox(height: 14),
+                        ...communityProjects.map((project) {
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: MouseRegion(
+                              cursor: SystemMouseCursors.click,
+                              child: GestureDetector(
+                                onTap: () => _handleProjectTap(project),
+                                child: Container(
+                                  width: containerWidth,
+                                  decoration: BoxDecoration(
+                                    border:
+                                        Border.all(color: Colors.tealAccent),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  padding: const EdgeInsets.all(14),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        project.name,
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 8),
+                                      Text(
+                                        project.description,
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }),
                       ],
                     ),
                   ),
-                  const Spacer(),
-                  if (!mobile) const Footer(),
-                ],
+                ),
               ),
             ),
-          ),
+            if (!mobile)
+              const Footer(), // Футер всегда после прокручиваемого контента
+          ],
         );
       },
     );
   }
 }
 
-class _ProjectVM extends Equatable {
+class _Project {
   final String name;
-  final String imageUrl;
-  final String route;
   final String description;
+  final String? route;
+  final String? externalUrl;
 
-  const _ProjectVM({
+  const _Project({
     required this.name,
-    required this.imageUrl,
-    required this.route,
     required this.description,
+    this.route,
+    this.externalUrl,
   });
-
-  @override
-  List<Object> get props => [
-        name,
-        imageUrl,
-        route,
-        description,
-      ];
 }

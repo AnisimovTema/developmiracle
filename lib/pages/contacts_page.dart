@@ -33,8 +33,8 @@ class ContactsPage extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 60,
+                    padding: EdgeInsets.symmetric(
+                      vertical: mobile ? 20 : 60,
                       horizontal: 20,
                     ),
                     width: double.infinity,

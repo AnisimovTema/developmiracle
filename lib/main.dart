@@ -1,5 +1,6 @@
 import 'package:developmiracle/delegates/arvessian_delegate.dart';
 import 'package:developmiracle/pages/arvessian_page.dart';
+import 'package:developmiracle/pages/brotherhood_page.dart';
 import 'package:developmiracle/pages/home_page.dart';
 import 'package:developmiracle/pages/linguea_page.dart';
 import 'package:developmiracle/pages/tracker_page.dart';
@@ -64,17 +65,21 @@ class _MyAppState extends State<MyApp> {
   }
 
   void changeLanguage() {
+    // print('test $_locale');
     // Получаем текущий индекс локали
-    int currentIndex =
-        supportedLocales.indexOf(widget.settingsController.localeMode);
+    int currentIndex = supportedLocales
+        .indexWhere((e) => _locale.languageCode == e.languageCode);
 
     int nextIndex = 0;
 
-    if (currentIndex == -1) {
-      nextIndex = (currentIndex + 1) % supportedLocales.length;
-    }
+    // if (currentIndex == -1) {
+
+    //   currentIndex = (currentIndex + 1) % supportedLocales.length;
+    // }
 
     nextIndex = (currentIndex + 1) % supportedLocales.length;
+
+    // print('1 - $currentIndex, 2 - $nextIndex');
 
     // Обновляем локаль через контроллер
     widget.settingsController.updateLocaleMode(supportedLocales[nextIndex]);
@@ -135,6 +140,12 @@ class _MyAppState extends State<MyApp> {
             break;
           case '/arvessian':
             builder = (BuildContext _) => ArvessianPage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
+            break;
+          case '/brotherhood':
+            builder = (BuildContext _) => BrotherhoodPage(
                   settingsController: widget.settingsController,
                   changeLanguage: changeLanguage,
                 );
