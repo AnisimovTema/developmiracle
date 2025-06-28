@@ -1,12 +1,11 @@
 import 'package:developmiracle/delegates/arvessian_delegate.dart';
+import 'package:developmiracle/flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:developmiracle/pages/arvessian_page.dart';
 import 'package:developmiracle/pages/brotherhood_page.dart';
 import 'package:developmiracle/pages/home_page.dart';
 import 'package:developmiracle/pages/linguea_page.dart';
 import 'package:developmiracle/pages/tracker_page.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'src/settings/settings_controller.dart';

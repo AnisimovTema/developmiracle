@@ -12,5 +12,7 @@
   "arvessian_title": "Arvessian",
   "arvessian_description": "Новый язык, который понятен всем",
   "brotherhood_title": "Brotherhood",
-  "brotherhood_description": "Единение, основанное на общности целей, взглядов и принципов"
+  "brotherhood_description": "Единение, основанное на общности целей, взглядов и принципов",
+  "placeholder_text_part_1": "Вы можете написать нам в Телеграм: ",
+  "placeholder_text_part_2": " или просто отправить письмо на почту: "
 }

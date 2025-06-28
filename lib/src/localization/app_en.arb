@@ -12,5 +12,7 @@
   "arvessian_title": "Arvessian",
   "arvessian_description": "A new language that anyone can understand",
   "brotherhood_title": "Brotherhood",
-  "brotherhood_description": "Unity based on common goals, views and principles"
+  "brotherhood_description": "Unity based on common goals, views and principles",
+  "placeholder_text_part_1": "You can write to us via Telegram ",
+  "placeholder_text_part_2": " or just send an email to "
 }

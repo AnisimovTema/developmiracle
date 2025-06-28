@@ -1,11 +1,10 @@
+import 'package:developmiracle/flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:developmiracle/main.dart';
 import 'package:developmiracle/pages/contacts_page.dart';
 import 'package:developmiracle/pages/projects_page.dart';
 import 'package:developmiracle/src/settings/settings_controller.dart';
 import 'package:developmiracle/widgets/miracle_appbar.dart';
 import 'package:flutter/material.dart';
-
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({
