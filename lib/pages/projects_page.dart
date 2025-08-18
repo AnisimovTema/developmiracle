@@ -26,6 +26,12 @@ class ProjectsPage extends StatelessWidget {
         route: 'linguea',
         externalUrl: 'https://linguea.app',
       ),
+      _Project(
+        name: messages.wave_title,
+        description: messages.wave_description,
+        route: 'wave',
+        externalUrl: null,
+      ),
     ];
 
     final communityProjects = [

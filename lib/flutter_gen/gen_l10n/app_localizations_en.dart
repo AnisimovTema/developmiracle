@@ -42,6 +42,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get arvessian_description => 'A new language that anyone can understand';
 
+      @override
+  String get wave_title => 'Wave';
+
+  @override
+  String get wave_description => 'Peer-to-peer chat and calls';
+
   @override
   String get brotherhood_title => 'Brotherhood';
 

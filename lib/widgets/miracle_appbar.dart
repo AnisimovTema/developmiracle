@@ -28,7 +28,7 @@ class MiracleAppbar extends StatelessWidget {
           TextButton.icon(
             icon: const Icon(
               Icons.language,
-              color: MyApp.accentColor,
+              color: MiracleDevelopmentApp.accentColor,
               size: 20,
             ),
             onPressed: changeLanguage,
@@ -41,7 +41,7 @@ class MiracleAppbar extends StatelessWidget {
           ),
         ],
       ),
-      backgroundColor: MyApp.backgroundColor,
+      backgroundColor: MiracleDevelopmentApp.backgroundColor,
       elevation: 0,
       actions: mobile ? null : navItems,
       forceMaterialTransparency: true,

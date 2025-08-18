@@ -139,14 +139,14 @@ class _HomePageState extends State<HomePage> {
                   icon: Icon(
                     iconData,
                     color: _currentIndex == idx
-                        ? MyApp.accentColor
+                        ? MiracleDevelopmentApp.accentColor
                         : (disabled ? Colors.grey : Colors.white),
                   ),
                   label: Text(
                     label,
                     style: TextStyle(
                       color: _currentIndex == idx
-                          ? MyApp.accentColor
+                          ? MiracleDevelopmentApp.accentColor
                           : (disabled ? Colors.grey : Colors.white),
                     ),
                   ),
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   DrawerHeader(
                     decoration: const BoxDecoration(
-                      color: MyApp.backgroundColor,
+                      color: MiracleDevelopmentApp.backgroundColor,
                     ),
                     child: Center(
                       child: Text(
@@ -198,8 +198,8 @@ class _HomePageState extends State<HomePage> {
           ? BottomNavigationBar(
               type: BottomNavigationBarType.fixed, // всегда показывать подписи
               currentIndex: _currentIndex,
-              backgroundColor: MyApp.backgroundColor,
-              selectedItemColor: MyApp.accentColor,
+              backgroundColor: MiracleDevelopmentApp.backgroundColor,
+              selectedItemColor: MiracleDevelopmentApp.accentColor,
               unselectedItemColor: Colors.white,
               onTap: (index) {
                 bool disabled = sections[index]['disabled'] ?? false;

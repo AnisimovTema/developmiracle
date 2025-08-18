@@ -5,6 +5,7 @@ import 'package:developmiracle/pages/brotherhood_page.dart';
 import 'package:developmiracle/pages/home_page.dart';
 import 'package:developmiracle/pages/linguea_page.dart';
 import 'package:developmiracle/pages/tracker_page.dart';
+import 'package:developmiracle/pages/wave_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
@@ -20,15 +21,15 @@ void main() async {
   final savedLocale = settingsController.localeMode;
 
   runApp(
-    MyApp(
+    MiracleDevelopmentApp(
       settingsController: settingsController,
       locale: savedLocale,
     ),
   );
 }
 
-class MyApp extends StatefulWidget {
-  const MyApp({
+class MiracleDevelopmentApp extends StatefulWidget {
+  const MiracleDevelopmentApp({
     super.key,
     required this.settingsController,
     required this.locale,
@@ -43,10 +44,10 @@ class MyApp extends StatefulWidget {
   final SettingsController settingsController;
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<MiracleDevelopmentApp> createState() => _MiracleDevelopmentAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MiracleDevelopmentAppState extends State<MiracleDevelopmentApp> {
   late Locale _locale;
 
   final List<Locale> supportedLocales = const [
@@ -104,11 +105,12 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       locale: _locale,
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: MyApp.backgroundColor,
-        primaryColor: MyApp.accentColor,
-        textTheme: ThemeData.dark()
-            .textTheme
-            .apply(bodyColor: MyApp.textColor, displayColor: MyApp.textColor),
+        scaffoldBackgroundColor: MiracleDevelopmentApp.backgroundColor,
+        primaryColor: MiracleDevelopmentApp.accentColor,
+        textTheme: ThemeData.dark().textTheme.apply(
+              bodyColor: MiracleDevelopmentApp.textColor,
+              displayColor: MiracleDevelopmentApp.textColor,
+            ),
       ),
       home: HomePage(
         settingsController: widget.settingsController,
@@ -133,6 +135,13 @@ class _MyAppState extends State<MyApp> {
             break;
           case '/linguea':
             builder = (BuildContext _) => LingueaPage(
+                  settingsController: widget.settingsController,
+                  changeLanguage: changeLanguage,
+                );
+            break;
+          case '/wave':
+            // ignore: prefer_const_constructors
+            builder = (BuildContext _) => WavePage(
                   settingsController: widget.settingsController,
                   changeLanguage: changeLanguage,
                 );

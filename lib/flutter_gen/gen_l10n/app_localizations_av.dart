@@ -28,25 +28,35 @@ class AppLocalizationsAv extends AppLocalizations {
   String get activitySelfTracker_title => 'Activity Self-Tracker';
 
   @override
-  String get activitySelfTracker_description => 'Collect statistics on your activity every 30 minutes, monitor productivity cycles and increase it';
+  String get activitySelfTracker_description =>
+      'Collect statistics on your activity every 30 minutes, monitor productivity cycles and increase it';
 
   @override
   String get linguea_title => 'Linguea';
 
   @override
-  String get linguea_description => 'Create your own dictionary - any words, languages and terms. Comfortable workouts using a proven technique. Practical words import/export';
+  String get linguea_description =>
+      'Create your own dictionary - any words, languages and terms. Comfortable workouts using a proven technique. Practical words import/export';
 
   @override
   String get arvessian_title => 'Arvessian';
 
   @override
-  String get arvessian_description => 'A new language that anyone can understand';
+  String get arvessian_description =>
+      'A new language that anyone can understand';
+
+  @override
+  String get wave_title => 'Wave';
+
+  @override
+  String get wave_description => 'Peer-to-peer chat and calls';
 
   @override
   String get brotherhood_title => 'Brotherhood';
 
   @override
-  String get brotherhood_description => 'Unity based on common goals, views and principles';
+  String get brotherhood_description =>
+      'Unity based on common goals, views and principles';
 
   @override
   String get placeholder_text_part_1 => 'You can write to us via Telegram ';

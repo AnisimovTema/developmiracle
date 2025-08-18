@@ -4,7 +4,7 @@ publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: ">=3.3.3 <4.0.0"
+  sdk: ">=3.5.3 <4.0.0"
 
 dependencies:
   flutter:
@@ -14,6 +14,10 @@ dependencies:
     sdk: flutter
   intl: ^0.19.0
   shared_preferences: ^2.5.3
+  p2p_chat:
+    git:
+      url: https://github.com/AnisimovTema/wave_p2p.git
+      ref: master
 
 dev_dependencies:
   flutter_test:

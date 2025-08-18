@@ -169,6 +169,10 @@ abstract class AppLocalizations {
   /// **'A new language that anyone can understand'**
   String get arvessian_description;
 
+  String get wave_title;
+
+  String get wave_description;
+
   /// No description provided for @brotherhood_title.
   ///
   /// In en, this message translates to:
