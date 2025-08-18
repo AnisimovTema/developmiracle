@@ -14,7 +14,7 @@ dependencies:
     sdk: flutter
   intl: ^0.19.0
   shared_preferences: ^2.5.3
-  p2p_chat:
+  wave_p2p:
     git:
       url: https://github.com/AnisimovTema/wave_p2p.git
       ref: master
