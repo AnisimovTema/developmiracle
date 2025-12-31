@@ -10,7 +10,9 @@ second variation: ` StoreConnector<AppState, Store<AppState>>(builder: () {}, co
 this project generates localized messages based on arb files found in
 the `lib/src/localization` directory
 
-to re-generate intl files, use `flutter gen-l10n --arb-dir=lib/src/localization --template-arb-file=app_en.arb --output-dir=lib/src/localization/generated` command 
+<!-- to re-generate intl files, use `flutter gen-l10n --arb-dir=lib/src/localization --template-arb-file=app_en.arb --output-dir=lib/src/localization/generated` command  -->
+
+>> to re-generate intl files, use `flutter gen-l10n --arb-dir=lib/src/localization --template-arb-file=app_en.arb --output-dir=lib/flutter_gen/gen_l10n` command 
 
 ## build_runner
 
@@ -22,4 +24,4 @@ to re-generate intl files, use `flutter gen-l10n --arb-dir=lib/src/localization 
 
 ## prod build
 
-`flutter build web --release`
+`fvm flutter build web --release`

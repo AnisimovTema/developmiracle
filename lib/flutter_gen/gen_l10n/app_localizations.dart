@@ -160,7 +160,7 @@ abstract class AppLocalizations {
   /// No description provided for @arvessian_title.
   ///
   /// In en, this message translates to:
-  /// **'Arvessian'**
+  /// **'Rinka'**
   String get arvessian_title;
 
   /// No description provided for @arvessian_description.
@@ -169,8 +169,16 @@ abstract class AppLocalizations {
   /// **'A new language that anyone can understand'**
   String get arvessian_description;
 
+  /// No description provided for @wave_title.
+  ///
+  /// In en, this message translates to:
+  /// **'Wave'**
   String get wave_title;
 
+  /// No description provided for @wave_description.
+  ///
+  /// In en, this message translates to:
+  /// **'Peer-to-peer chat and calls'**
   String get wave_description;
 
   /// No description provided for @brotherhood_title.

@@ -1,3 +1,5 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
 import 'app_localizations.dart';
 
 // ignore_for_file: type=lint
@@ -37,12 +39,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get linguea_description => 'Создайте свой словарь - любые слова, языки или термины. Комфортные тренировки с использованием доказанных методик. Практичный импорт/экспорт слов';
 
   @override
-  String get arvessian_title => 'Arvessian';
+  String get arvessian_title => 'Rinka';
 
   @override
   String get arvessian_description => 'Новый язык, который понятен всем';
 
-    @override
+  @override
   String get wave_title => 'Wave';
 
   @override

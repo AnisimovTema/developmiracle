@@ -12,11 +12,15 @@ dependencies:
   equatable: ^2.0.7
   flutter_localizations:
     sdk: flutter
-  intl: ^0.19.0
+  intl: ^0.20.2
   shared_preferences: ^2.5.3
-  wave_p2p:
+  # wave_p2p:
+  #   git:
+  #     url: https://github.com/AnisimovTema/wave_p2p.git
+  #     ref: master
+  rinka:
     git:
-      url: https://github.com/AnisimovTema/wave_p2p.git
+      url: https://github.com/AnisimovTema/rinka.git
       ref: master
 
 dev_dependencies:
@@ -24,9 +28,29 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^4.0.0
   url_launcher: ^6.1.7
-  analyzer: ^6.7.0
   build_runner:
+  analyzer: ^9.0.0
 
 flutter:
   uses-material-design: true
   generate: true
+  fonts:
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/Roboto-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Roboto-SemiBold.ttf
+          weight: 600
+    - family: Rinka
+      fonts:
+        - asset: assets/fonts/Rinka.ttf
+          weight: 400
+  assets:
+    # x24 icons
+    - assets/icons/x24/
+    # x48 icons
+    - assets/icons/x48/
+    # x64 icons
+    - assets/icons/x64/
