@@ -24,4 +24,4 @@ the `lib/src/localization` directory
 
 ## prod build
 
-`fvm flutter build web --release`
+`fvm flutter build web --release --no-tree-shake-icons`
